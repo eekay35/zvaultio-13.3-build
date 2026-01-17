@@ -1,0 +1,119 @@
+diff --git a/Makefile b/Makefile
+index e94167e..921ae00 100644
+--- a/Makefile
++++ b/Makefile
+@@ -112,13 +112,13 @@ buildenv:
+ 	@${BUILD_TOOLS}/buildenv.py sh
+ 
+ bootstrap-pkgs:
+-	pkg install -y archivers/pxz
+ 	pkg install -y lang/python3
+ 	pkg install -y lang/python
+ 	pkg install -y ports-mgmt/poudriere-devel
+ 	pkg install -y devel/gmake
+ 	pkg install -y archivers/pigz
+ 	python -m ensurepip
++	python -m pip install --upgrade pip
+ 	python -m pip install six
+ 
+ changelog-nightly:
+diff --git a/build/profiles/zvault/jail.pyd b/build/profiles/zvault/jail.pyd
+index f6bf2e0..5233483 100644
+--- a/build/profiles/zvault/jail.pyd
++++ b/build/profiles/zvault/jail.pyd
+@@ -60,3 +60,8 @@ copy += {
+     "source": "${BE_ROOT}/zvio-iocage",
+     "dest": "/usr/iocage_src"
+ }
++
++copy += {
++    "source": "${BE_ROOT}/zvio-py-fenced",
++    "dest": "/usr/nas_source/zvio-py-fenced"
++}
+diff --git a/build/profiles/zvault/repos.pyd b/build/profiles/zvault/repos.pyd
+index 2a426b1..a5e74ef 100644
+--- a/build/profiles/zvault/repos.pyd
++++ b/build/profiles/zvault/repos.pyd
+@@ -27,14 +27,14 @@
+ repos += {
+     "name": "zvio-os",
+     "path": "zvio-os",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-os",
++    "url": "https://github.com/zvaultio/zvio-os",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name": "zvio-middleware",
+     "path": "zvio-middleware",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-middleware",
++    "url": "https://github.com/zvaultio/zvio-middleware",
+     "branch": "zvio-13.3"
+ }
+ 
+@@ -42,41 +42,47 @@ repos += {
+ repos += {
+     "name": "zvio-webui",
+     "path": "zvio-webui",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-webui",
++    "url": "https://github.com/zvaultio/zvio-webui",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name": "zvio-ports",
+     "path": "zvio-ports",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-ports.git",
++    "url": "https://github.com/zvaultio/zvio-ports.git",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name" :"zvio-py-licenselib",
+     "path": "zvio-py-licenselib",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-py-licenselib.git",
++    "url": "https://github.com/zvaultio/zvio-py-licenselib.git",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name": "zvio-pkgtools",
+     "path": "zvio-pkgtools",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-pkgtools.git",
++    "url": "https://github.com/zvaultio/zvio-pkgtools.git",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name": "zvio-py-bsd",
+     "path": "zvio-py-bsd",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-py-bsd.git",
++    "url": "https://github.com/zvaultio/zvio-py-bsd.git",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name": "zvio-iocage",
+     "path": "zvio-iocage",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-iocage.git",
++    "url": "https://github.com/zvaultio/zvio-iocage.git",
++    "branch": "zvio-13.3"
++}
++repos += {
++    "name": "zvio-py-fenced",
++    "path": "zvio-py-fenced",
++    "url": "https://github.com/zvaultio/zvio-py-fenced.git",
+     "branch": "zvio-13.3"
+ }
+diff --git a/build/tools/check-host.py b/build/tools/check-host.py
+index ec231b5..d2a5c89 100755
+--- a/build/tools/check-host.py
++++ b/build/tools/check-host.py
+@@ -66,7 +66,6 @@ def check_port_byfile(name, port, fname):
+ 
+ def check_build_tools():
+     check_port('git', 'devel/git')
+-    check_port('pxz', 'archivers/pxz')
+     check_port('python3', 'lang/python3')
+     check_port('poudriere', 'ports-mgmt/poudriere-devel')
+     check_port('gmake', 'devel/gmake')
