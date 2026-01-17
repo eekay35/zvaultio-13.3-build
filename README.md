@@ -1,5 +1,6 @@
 # About
-This is just a simple patch to get zVaultIO build using the 13.3 repo.
+This is just a simple patch to get zVaultIO built using the 13.3 repo.
+Hopefully, more to come in the near future.
 
 # Usage
 ```
