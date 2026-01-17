@@ -31,7 +31,7 @@ index f6bf2e0..5233483 100644
 +    "dest": "/usr/nas_source/zvio-py-fenced"
 +}
 diff --git a/build/profiles/zvault/repos.pyd b/build/profiles/zvault/repos.pyd
-index 2a426b1..a5e74ef 100644
+index 2a426b1..7c9e94a 100644
 --- a/build/profiles/zvault/repos.pyd
 +++ b/build/profiles/zvault/repos.pyd
 @@ -27,14 +27,14 @@
@@ -51,7 +51,7 @@ index 2a426b1..a5e74ef 100644
      "branch": "zvio-13.3"
  }
  
-@@ -42,41 +42,47 @@ repos += {
+@@ -42,41 +42,48 @@ repos += {
  repos += {
      "name": "zvio-webui",
      "path": "zvio-webui",
@@ -99,6 +99,7 @@ index 2a426b1..a5e74ef 100644
 +    "url": "https://github.com/zvaultio/zvio-iocage.git",
 +    "branch": "zvio-13.3"
 +}
++
 +repos += {
 +    "name": "zvio-py-fenced",
 +    "path": "zvio-py-fenced",
