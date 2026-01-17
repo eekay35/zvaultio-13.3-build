@@ -2,6 +2,7 @@
 This is just a simple patch to get zVaultIO build using the 13.3 repo.
 
 # Usage
+```
 git clone https://github.com/zvaultio/zvio-build.git
 cd zvio-build/
 git checkout remotes/origin/zvio-13.3
@@ -10,3 +11,4 @@ git apply zvaultio-13.5.patch
 make bootstrap-pkgs
 make checkout zvault
 make release PROFILE=zvault PRODUCT=zVault Train=zVault-13
+```
