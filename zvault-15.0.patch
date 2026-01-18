@@ -170,7 +170,7 @@ index 988a650..dd46710 100644
  
  ## End TrueNAS specific section
 diff --git a/build/profiles/zvault/ports-system.pyd b/build/profiles/zvault/ports-system.pyd
-index e34bca2..50b4580 100644
+index e34bca2..fd4cff3 100644
 --- a/build/profiles/zvault/ports-system.pyd
 +++ b/build/profiles/zvault/ports-system.pyd
 @@ -25,7 +25,7 @@
@@ -254,7 +254,14 @@ index e34bca2..50b4580 100644
      "options": [
          "OPTIONS_FILE_SET+=ACL_SUPPORT",
          "OPTIONS_FILE_SET+=ADS",
-@@ -322,7 +318,6 @@ ports += {
+@@ -316,13 +312,13 @@ ports += {
+         "OPTIONS_FILE_UNSET+=BIND910",
+         "OPTIONS_FILE_UNSET+=AVAHI",
+         "OPTIONS_FILE_UNSET+=MDNSRESPONDER",
++        "OPTIONS_FILE_UNSET+=ZEROCONF",
+     ]
+ }
+ 
  ports += "sysutils/lsof"
  ports += "sysutils/grub2-bhyve"
  ports += "sysutils/beadm"
@@ -262,7 +269,7 @@ index e34bca2..50b4580 100644
  ports += "misc/xtail"
  ports += "sysutils/edk2@bhyve"
  ports += "benchmarks/fio"
-@@ -338,10 +333,6 @@ ports += "devel/py-xattr"
+@@ -338,10 +334,6 @@ ports += "devel/py-xattr"
  ports += "converters/convmv"
  
  #ports += "sysutils/ipfs-go"
@@ -273,7 +280,7 @@ index e34bca2..50b4580 100644
  ports += "misc/mmv"
  ports += "misc/mbuffer"
  ports += {
-@@ -352,9 +343,8 @@ ports += "sysutils/ncdu"
+@@ -352,9 +344,8 @@ ports += "sysutils/ncdu"
  
  # There ports are all vm related.
  ports += "www/novnc"

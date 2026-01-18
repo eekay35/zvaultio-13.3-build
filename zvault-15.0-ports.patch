@@ -1,0 +1,35 @@
+diff --git a/sysutils/arcconf/Makefile b/sysutils/arcconf/Makefile
+index d525bbbf5..6ac1a0a6f 100644
+--- a/sysutils/arcconf/Makefile
++++ b/sysutils/arcconf/Makefile
+@@ -1,8 +1,8 @@
+ PORTNAME=	arcconf
+-DISTVERSION=	4.09.00.${BUILD}
++DISTVERSION=	4.23.00.${BUILD}
+ PORTEPOCH=	1
+ CATEGORIES=	sysutils
+-MASTER_SITES=	https://download.adaptec.com/raid/storage_manager/
++MASTER_SITES=	https://storage.microsemi.com/raid/storage_manager/
+ DISTNAME=	arcconf_B${BUILD}
+ 
+ MAINTAINER=	michael@fuckner.net
+@@ -20,7 +20,7 @@ LIB_DEPENDS=	libstdc++.so.6:lang/gcc${GCC_DEFAULT}
+ 
+ USES=		zip
+ USE_GCC=	yes
+-BUILD=		25611
++BUILD=		27147
+ 
+ SUB_FILES+=	${PERIODICSCRIPT}
+ 
+diff --git a/sysutils/arcconf/distinfo b/sysutils/arcconf/distinfo
+index 8cc9474ad..b72afbd3e 100644
+--- a/sysutils/arcconf/distinfo
++++ b/sysutils/arcconf/distinfo
+@@ -1,3 +1,3 @@
+-TIMESTAMP = 1696308443
+-SHA256 (arcconf_B25611.zip) = 6543b9d636e6e595bf51ac880ab17c5bd59c80bb27186b0f37f979f46914d669
+-SIZE (arcconf_B25611.zip) = 47701464
++TIMESTAMP = 1744673640
++SHA256 (arcconf_B27147.zip) = 14f25095870e0652083f5f8924a85ddf5aa805623a5a521d93b746d9570550d4
++SIZE (arcconf_B27147.zip) = 14410508

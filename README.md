@@ -26,6 +26,9 @@ git apply zvault-15.0.patch
 make bootstrap-pkgs
 make checkout zvault
 fetch https://raw.githubusercontent.com/eekay35/zvaultio-13.3-build/refs/heads/main/zvault-15.0-middleware.patch -o zvault-15.0-middleware.patch
-git apply zvault-15.0-middleware.patch
+git -C zvault/_BE/zvio-middleware apply zvault-15.0-middleware.patch
+make release PROFILE=zvault PRODUCT=zVault Train=zVault-15
+fetch https://raw.githubusercontent.com/eekay35/zvaultio-13.3-build/refs/heads/main/zvault-15.0-ports.patch -o zvault-15.0-ports.patch
+git -C zvault/_BE/zvio-ports apply zvault-15.0-ports.patch
 make release PROFILE=zvault PRODUCT=zVault Train=zVault-15
 ```
