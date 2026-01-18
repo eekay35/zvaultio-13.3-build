@@ -1,0 +1,411 @@
+diff --git a/Makefile b/Makefile
+index e94167e..549d6f9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -112,13 +112,9 @@ buildenv:
+ 	@${BUILD_TOOLS}/buildenv.py sh
+ 
+ bootstrap-pkgs:
+-	pkg install -y archivers/pxz
+-	pkg install -y lang/python3
+-	pkg install -y lang/python
+-	pkg install -y ports-mgmt/poudriere-devel
+-	pkg install -y devel/gmake
+-	pkg install -y archivers/pigz
++	pkg install -y lang/python3 lang/python ports-mgmt/poudriere-devel devel/gmake archivers/pigz
+ 	python -m ensurepip
++	python -m pip install --upgrade pip
+ 	python -m pip install six
+ 
+ changelog-nightly:
+diff --git a/build/config/env.pyd b/build/config/env.pyd
+index 92ec2e2..8df0767 100644
+--- a/build/config/env.pyd
++++ b/build/config/env.pyd
+@@ -41,7 +41,7 @@ PACKAGES_DESTDIR = "${OBJDIR}/packages"
+ INSTUFS_DESTDIR = "${OBJDIR}/instufs"
+ ISO_DESTDIR = "${OBJDIR}/iso"
+ CDROM_LABEL = PRODUCT.upper()
+-FREEBSD_RELEASE_VERSION = "13.3-RELEASE"
++FREEBSD_RELEASE_VERSION = "15.0-RELEASE"
+ BUILD_ARCH = "amd64"
+ BUILD_ARCH_SHORT = "x64"
+ PRODUCTION = PRODUCTION or "no"
+diff --git a/build/config/ports-installer.pyd b/build/config/ports-installer.pyd
+index 4476aa7..aeb240a 100644
+--- a/build/config/ports-installer.pyd
++++ b/build/config/ports-installer.pyd
+@@ -27,7 +27,7 @@ freenas_git_rev = sh("git -C ${BE_ROOT}/freenas log -1 --pretty=format:%ct") \
+     if exists("${BE_ROOT}/freenas") \
+     else "0"
+ 
+-ports += "sysutils/openzfs"
++ports += "filesystems/openzfs"
+ ports += "lang/python3"
+ ports += "lang/python"
+ ports += "databases/sqlite3"
+@@ -35,7 +35,7 @@ ports += "databases/py-sqlite3"
+ # TODO: Is berkeleydb even used?
+ ports += "databases/py-berkeleydb"
+ ports += "devel/py-six"
+-ports += "devel/py-libzfs"
++ports += "filesystems/py-libzfs"
+ ports += "freenas/py-bsd"
+ 
+ ports += {
+diff --git a/build/profiles/freenas/config.pyd b/build/profiles/freenas/config.pyd
+index db61d89..25fe269 100644
+--- a/build/profiles/freenas/config.pyd
++++ b/build/profiles/freenas/config.pyd
+@@ -151,8 +151,8 @@ make_conf_jail = {
+ 
+ # Packages configuration
+ make_conf_pkg = {
+-    "DEFAULT_VERSIONS":             "python=3.9 python3=3.9 ssl=base",
+-    "WITH_SAMBA4_PYTHON3":          "python3.9",
++    "DEFAULT_VERSIONS":             "python=3.11 python3=3.11 ssl=base",
++    "WITH_SAMBA4_PYTHON3":          "python3.11",
+     "OPTIONS_UNSET":                "DOCS X11 JAVA",
+     "WANT_OPENLDAP_SASL":           "yes",
+     "USE_PACKAGE_DEPENDS":          "yes",
+diff --git a/build/profiles/freenas/ports-system.pyd b/build/profiles/freenas/ports-system.pyd
+index e34bca2..eb1637d 100644
+--- a/build/profiles/freenas/ports-system.pyd
++++ b/build/profiles/freenas/ports-system.pyd
+@@ -25,7 +25,7 @@
+ 
+ ports += "ports-mgmt/pkg"
+ ports += {
+-    "name": "sysutils/openzfs",
++    "name": "filesystems/openzfs",
+     "options": ["OPTIONS_FILE_SET+=PYTHON"]
+ }
+ ports += "dns/bind-tools"
+diff --git a/build/profiles/zvault/config.pyd b/build/profiles/zvault/config.pyd
+index db61d89..25fe269 100644
+--- a/build/profiles/zvault/config.pyd
++++ b/build/profiles/zvault/config.pyd
+@@ -151,8 +151,8 @@ make_conf_jail = {
+ 
+ # Packages configuration
+ make_conf_pkg = {
+-    "DEFAULT_VERSIONS":             "python=3.9 python3=3.9 ssl=base",
+-    "WITH_SAMBA4_PYTHON3":          "python3.9",
++    "DEFAULT_VERSIONS":             "python=3.11 python3=3.11 ssl=base",
++    "WITH_SAMBA4_PYTHON3":          "python3.11",
+     "OPTIONS_UNSET":                "DOCS X11 JAVA",
+     "WANT_OPENLDAP_SASL":           "yes",
+     "USE_PACKAGE_DEPENDS":          "yes",
+diff --git a/build/profiles/zvault/env.pyd b/build/profiles/zvault/env.pyd
+index e0a1c09..6b266c1 100644
+--- a/build/profiles/zvault/env.pyd
++++ b/build/profiles/zvault/env.pyd
+@@ -1,6 +1,6 @@
+ MILESTONE = MILESTONE or "MASTER"
+-FREEBSD_RELEASE_VERSION = "13.3-RELEASE"
+-VERSION_NUMBER = "13.3"
++FREEBSD_RELEASE_VERSION = "15.0-RELEASE"
++VERSION_NUMBER = "15.0"
+ FREENAS_ROOT = "${BE_ROOT}/zvio-middleware"
+ SRC_ROOT = "${FREENAS_ROOT}/zvio-os"
+ 
+diff --git a/build/profiles/zvault/jail.pyd b/build/profiles/zvault/jail.pyd
+index f6bf2e0..5233483 100644
+--- a/build/profiles/zvault/jail.pyd
++++ b/build/profiles/zvault/jail.pyd
+@@ -60,3 +60,8 @@ copy += {
+     "source": "${BE_ROOT}/zvio-iocage",
+     "dest": "/usr/iocage_src"
+ }
++
++copy += {
++    "source": "${BE_ROOT}/zvio-py-fenced",
++    "dest": "/usr/nas_source/zvio-py-fenced"
++}
+diff --git a/build/profiles/zvault/kernel/ZVAULT.amd64 b/build/profiles/zvault/kernel/ZVAULT.amd64
+index 988a650..dd46710 100644
+--- a/build/profiles/zvault/kernel/ZVAULT.amd64
++++ b/build/profiles/zvault/kernel/ZVAULT.amd64
+@@ -144,7 +144,7 @@ device		siis			# SiliconImage SiI3124/SiI3132/SiI3531 SATA
+ # SCSI Controllers
+ device		ahc			# AHA2940 and onboard AIC7xxx devices
+ device		ahd			# AHA39320/29320 and onboard AIC79xx devices
+-device		esp			# AMD Am53C974 (Tekram DC-390(T))
++#device		esp			# AMD Am53C974 (Tekram DC-390(T))
+ device		hptiop			# Highpoint RocketRaid 3xxx series
+ device		isp			# Qlogic family
+ #device		ispfw			# Firmware for QLogic HBAs- normally a module
+@@ -167,13 +167,13 @@ device		ses			# Enclosure Services (SES and SAF-TE)
+ #device		ctl			# CAM Target Layer
+ 
+ # RAID controllers interfaced to the SCSI subsystem
+-device		amr			# AMI MegaRAID
++#device		amr			# AMI MegaRAID
+ device		arcmsr			# Areca SATA II RAID
+ device		ciss			# Compaq Smart RAID 5*
+-device		iir			# Intel Integrated RAID
++#device		iir			# Intel Integrated RAID
+ device		ips			# IBM (Adaptec) ServeRAID
+ #device		mly			# Mylex AcceleRAID/eXtremeRAID
+-device		twa			# 3ware 9000 series PATA/SATA RAID
++#device		twa			# 3ware 9000 series PATA/SATA RAID
+ device		smartpqi		# Microsemi smartpqi driver
+ device		tws			# LSI 3ware 9750 SATA+SAS 6Gb/s RAID controller
+ 
+@@ -392,6 +392,7 @@ device		hyperv			# HyperV drivers
+ # NOTE: XENHVM depends on xenpci.  They must be added or removed together.
+ options 	XENHVM			# Xen HVM kernel infrastructure
+ device		xenpci			# Xen HVM Hypervisor services driver
++device		xentimer		# Xen x86 PV timer device
+ 
+ # Netmap provides direct access to TX/RX rings on supported NICs
+ #device		netmap			# netmap(4) support
+@@ -467,7 +468,7 @@ device		ntb_transport	# NTB packet transport driver
+ device		ntb		# NTB hardware interface
+ device		ntb_hw_intel	# Intel NTB hardware driver
+ device		ntb_hw_plx	# PLX NTB hardware driver
+-device		ixnvdimm	# NVDIMM driver with sync over NTB
++#device		ixnvdimm	# NVDIMM driver with sync over NTB
+ device		ioat		# Intel I/OAT DMA engine
+ 
+ ## End TrueNAS specific section
+diff --git a/build/profiles/zvault/ports-system.pyd b/build/profiles/zvault/ports-system.pyd
+index e34bca2..50b4580 100644
+--- a/build/profiles/zvault/ports-system.pyd
++++ b/build/profiles/zvault/ports-system.pyd
+@@ -25,7 +25,7 @@
+ 
+ ports += "ports-mgmt/pkg"
+ ports += {
+-    "name": "sysutils/openzfs",
++    "name": "filesystems/openzfs",
+     "options": ["OPTIONS_FILE_SET+=PYTHON"]
+ }
+ ports += "dns/bind-tools"
+@@ -51,7 +51,6 @@ ports += "sysutils/pciutils"
+ ports += "net/socat"
+ ports += "sysutils/pv"
+ ports += "sysutils/openseachest"
+-ports += "dns/inadyn-troglobit"
+ ports += "editors/nano"
+ ports += {
+     "name": "editors/jed",
+@@ -110,7 +109,6 @@ ports += {
+ }
+ ports += "lang/python3"
+ ports += "lang/python"
+-ports += "sysutils/scanlnk"
+ ports += "sysutils/iocage"
+ ports += "security/pam_mkhomedir"
+ ports += {
+@@ -129,10 +127,10 @@ ports += {
+         "OPTIONS_FILE_SET+=WINSCP"
+     ]
+ }
+-ports += "sysutils/e2fsprogs"
+-ports += "sysutils/fusefs-libs"
+-ports += "sysutils/fusefs-ntfs"
+-ports += "sysutils/fusefs-s3fs"
++ports += "filesystems/e2fsprogs"
++ports += "filesystems/fusefs-libs"
++ports += "filesystems/ntfs"
++ports += "filesystems/s3fs"
+ ports += "sysutils/smartmontools"
+ ports += "net/libdnet"
+ ports += {
+@@ -217,13 +215,12 @@ ports += {
+ 
+ ports += "converters/base64"
+ ports += {
+-    "name": "emulators/mtools",
++    "name": "filesystems/mtools",
+     "options": ["OPTIONS_FILE_UNSET+=X11"]
+ }
+ ports += "sysutils/arcconf"
+ ports += "sysutils/tw_cli"
+ ports += "sysutils/megacli"
+-ports += "sysutils/areca-cli"
+ ports += "sysutils/hptcli"
+ ports += {
+     "name": "net/py-python-ldap",
+@@ -242,7 +239,7 @@ ports += {
+     "options": ["OPTIONS_FILE_SET+=LIBEVENT2"]
+ }
+ ports += {
+-    "name": "net/netatalk3",
++    "name": "net/netatalk4",
+     "options": [
+         "OPTIONS_FILE_SET+=PAM",
+         "OPTIONS_FILE_SET+=ACL",
+@@ -271,7 +268,6 @@ ports += {
+ ports += "sysutils/ipmitool"
+ ports += "devel/py-daemon"
+ ports += "www/wgetpaste"
+-ports += "sysutils/sedutil"
+ ports += "sysutils/sg3_utils"
+ ports += "sysutils/smp_utils"
+ ports += "net/trafshow"
+@@ -288,7 +284,7 @@ ports += {
+     "options": ["OPTIONS_FILE_SET+=IPV6"]
+ }
+ ports += {
+-    "name": "net/samba",
++    "name": "net/samba423",
+     "options": [
+         "OPTIONS_FILE_SET+=ACL_SUPPORT",
+         "OPTIONS_FILE_SET+=ADS",
+@@ -322,7 +318,6 @@ ports += {
+ ports += "sysutils/lsof"
+ ports += "sysutils/grub2-bhyve"
+ ports += "sysutils/beadm"
+-ports += "sysutils/throttle"
+ ports += "misc/xtail"
+ ports += "sysutils/edk2@bhyve"
+ ports += "benchmarks/fio"
+@@ -338,10 +333,6 @@ ports += "devel/py-xattr"
+ ports += "converters/convmv"
+ 
+ #ports += "sysutils/ipfs-go"
+-ports += {
+-    "name": "www/py-ws4py",
+-    "options": ["OPTIONS_FILE_UNSET+=CHERRYPY", "OPTIONS_FILE_UNSET+=GEVENT"]
+-}
+ ports += "misc/mmv"
+ ports += "misc/mbuffer"
+ ports += {
+@@ -352,9 +343,8 @@ ports += "sysutils/ncdu"
+ 
+ # There ports are all vm related.
+ ports += "www/novnc"
+-ports += "www/novnc-websockify"
++ports += "devel/py-websockify"
+ ports += "net/libvncserver"
+-ports += "devel/libhyve-remote"
+ 
+ ports += "graphics/drm-kmod"
+ ports += "net/aquantia-atlantic-kmod"
+diff --git a/build/profiles/zvault/repos.pyd b/build/profiles/zvault/repos.pyd
+index 2a426b1..ec10f24 100644
+--- a/build/profiles/zvault/repos.pyd
++++ b/build/profiles/zvault/repos.pyd
+@@ -27,14 +27,14 @@
+ repos += {
+     "name": "zvio-os",
+     "path": "zvio-os",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-os",
+-    "branch": "zvio-13.3"
++    "url": "https://git.freebsd.org/src.git",
++    "branch": "releng/15.0"
+ }
+ 
+ repos += {
+     "name": "zvio-middleware",
+     "path": "zvio-middleware",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-middleware",
++    "url": "https://github.com/zvaultio/zvio-middleware.git",
+     "branch": "zvio-13.3"
+ }
+ 
+@@ -42,41 +42,48 @@ repos += {
+ repos += {
+     "name": "zvio-webui",
+     "path": "zvio-webui",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-webui",
++    "url": "https://github.com/zvaultio/zvio-webui.git",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name": "zvio-ports",
+     "path": "zvio-ports",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-ports.git",
+-    "branch": "zvio-13.3"
++    "url": "https://git.freebsd.org/ports.git",
++    "branch": "2026Q1"
+ }
+ 
+ repos += {
+     "name" :"zvio-py-licenselib",
+     "path": "zvio-py-licenselib",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-py-licenselib.git",
++    "url": "https://github.com/zvaultio/zvio-py-licenselib.git",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name": "zvio-pkgtools",
+     "path": "zvio-pkgtools",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-pkgtools.git",
++    "url": "https://github.com/zvaultio/zvio-pkgtools.git",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name": "zvio-py-bsd",
+     "path": "zvio-py-bsd",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-py-bsd.git",
++    "url": "https://github.com/zvaultio/zvio-py-bsd.git",
+     "branch": "zvio-13.3"
+ }
+ 
+ repos += {
+     "name": "zvio-iocage",
+     "path": "zvio-iocage",
+-    "url": "http://127.0.0.1:3000/zvaultio/zvio-iocage.git",
++    "url": "https://github.com/zvaultio/zvio-iocage.git",
++    "branch": "zvio-13.3"
++}
++
++repos += {
++    "name": "zvio-py-fenced",
++    "path": "zvio-py-fenced",
++    "url": "https://github.com/zvaultio/zvio-py-fenced.git",
+     "branch": "zvio-13.3"
+ }
+diff --git a/build/tools/build-ports.py b/build/tools/build-ports.py
+index 170616b..35b8282 100755
+--- a/build/tools/build-ports.py
++++ b/build/tools/build-ports.py
+@@ -75,7 +75,7 @@ def create_poudriere_config():
+         'ports_repo': config['repos'].where(name='zvio-ports')['path'],
+         'ports_branch': config['repos'].where(name='zvio-ports')['branch'],
+         'no_zfs': 'yes',
+-        'package_fetch_branch': 'lates',
++        'package_fetch_branch': 'latest',
+         'package_fetch_whitelist': 'gcc* rust'
+     }
+ 
+@@ -234,7 +234,7 @@ def cleanup_env():
+ 
+ def run():
+     global poudriere_proc
+-    poudriere_proc = sh_spawn('poudriere -e ${POUDRIERE_ROOT}/etc bulk -w -J', str(makejobs), '-f', portslist, '-j ${jailname} -p p', detach=True)
++    poudriere_proc = sh_spawn('poudriere -e ${POUDRIERE_ROOT}/etc bulk -b latest -w -J', str(makejobs), '-f', portslist, '-j ${jailname} -p p', detach=True)
+     poudriere_proc.wait()
+ 
+     if poudriere_proc.returncode != 0:
+diff --git a/build/tools/check-host.py b/build/tools/check-host.py
+index ec231b5..d2a5c89 100755
+--- a/build/tools/check-host.py
++++ b/build/tools/check-host.py
+@@ -66,7 +66,6 @@ def check_port_byfile(name, port, fname):
+ 
+ def check_build_tools():
+     check_port('git', 'devel/git')
+-    check_port('pxz', 'archivers/pxz')
+     check_port('python3', 'lang/python3')
+     check_port('poudriere', 'ports-mgmt/poudriere-devel')
+     check_port('gmake', 'devel/gmake')
+diff --git a/build/tools/checkout.py b/build/tools/checkout.py
+index 7c2ba0c..4af16a2 100755
+--- a/build/tools/checkout.py
++++ b/build/tools/checkout.py
+@@ -139,7 +139,7 @@ def checkout_repo(cwd, repo):
+                 sh('git clone --reference', refclone,
+                    '-b', branch, repo_url, repo_path)
+             else:
+-                sh('git clone -b', branch, repo_url, repo_path)
++                sh('git clone -b', branch, '--depth 1', repo_url, repo_path)
+         os.chdir(repo_path)
+ 
+     if e('${CHECKOUT_TAG}'):
