@@ -3,6 +3,7 @@ This is just a simple patch to get zVaultIO built using the 13.3 repo.
 Hopefully, more to come in the near future.
 
 # Usage
+NOTE: This should all be done as the root user to avoid any issues.
 
 ## For FBSD 13.3 Build
 ```
