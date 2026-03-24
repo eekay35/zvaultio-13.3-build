@@ -4,7 +4,7 @@ Hopefully, more to come in the near future.
 
 # Usage
 
-## For FBSD 13.5 Build
+## For FBSD 13.3 Build
 ```
 git clone https://github.com/zvaultio/zvio-build.git
 cd zvio-build/
