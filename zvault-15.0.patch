@@ -32,7 +32,7 @@ index 92ec2e2..8df0767 100644
  BUILD_ARCH_SHORT = "x64"
  PRODUCTION = PRODUCTION or "no"
 diff --git a/build/config/ports-installer.pyd b/build/config/ports-installer.pyd
-index 4476aa7..aeb240a 100644
+index 4476aa7..7f542e4 100644
 --- a/build/config/ports-installer.pyd
 +++ b/build/config/ports-installer.pyd
 @@ -27,7 +27,7 @@ freenas_git_rev = sh("git -C ${BE_ROOT}/freenas log -1 --pretty=format:%ct") \
@@ -44,15 +44,28 @@ index 4476aa7..aeb240a 100644
  ports += "lang/python3"
  ports += "lang/python"
  ports += "databases/sqlite3"
-@@ -35,7 +35,7 @@ ports += "databases/py-sqlite3"
+@@ -35,7 +35,8 @@ ports += "databases/py-sqlite3"
  # TODO: Is berkeleydb even used?
  ports += "databases/py-berkeleydb"
  ports += "devel/py-six"
 -ports += "devel/py-libzfs"
++ports += "devel/py-setuptools"
 +ports += "filesystems/py-libzfs"
  ports += "freenas/py-bsd"
  
  ports += {
+diff --git a/build/config/templates/poudriere.conf b/build/config/templates/poudriere.conf
+index 36647e4..743716e 100644
+--- a/build/config/templates/poudriere.conf
++++ b/build/config/templates/poudriere.conf
+@@ -9,5 +9,7 @@ GIT_URL=${ports_repo}
+ GIT_BRANCH=${ports_branch}
+ DISTFILES_CACHE=${DISTFILES_CACHE}
+ ALLOW_MAKE_JOBS=yes
++PACKAGE_FETCH_BRANCH=latest
++PACKAGE_FETCH_URL=https://pkg.FreeBSD.org/\${ABI}
+ RESTRICT_NETWORKING=no
+ BUILD_AS_NON_ROOT=no
 diff --git a/build/profiles/freenas/config.pyd b/build/profiles/freenas/config.pyd
 index db61d89..25fe269 100644
 --- a/build/profiles/freenas/config.pyd
@@ -292,7 +305,7 @@ index e34bca2..fd4cff3 100644
  ports += "graphics/drm-kmod"
  ports += "net/aquantia-atlantic-kmod"
 diff --git a/build/profiles/zvault/repos.pyd b/build/profiles/zvault/repos.pyd
-index 2a426b1..ec10f24 100644
+index 2a426b1..579b393 100644
 --- a/build/profiles/zvault/repos.pyd
 +++ b/build/profiles/zvault/repos.pyd
 @@ -27,14 +27,14 @@
@@ -328,7 +341,7 @@ index 2a426b1..ec10f24 100644
 -    "url": "http://127.0.0.1:3000/zvaultio/zvio-ports.git",
 -    "branch": "zvio-13.3"
 +    "url": "https://git.freebsd.org/ports.git",
-+    "branch": "2026Q1"
++    "branch": "main"
  }
  
  repos += {

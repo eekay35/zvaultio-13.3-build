@@ -1,5 +1,5 @@
 diff --git a/nas_ports/freenas/py-middlewared/Makefile b/nas_ports/freenas/py-middlewared/Makefile
-index a89c769..2a6110c 100644
+index a89c769..c62c856 100644
 --- a/nas_ports/freenas/py-middlewared/Makefile
 +++ b/nas_ports/freenas/py-middlewared/Makefile
 @@ -15,22 +15,20 @@ EXTRACT_ONLY=
@@ -14,7 +14,7 @@ index a89c769..2a6110c 100644
  		${PYTHON_PKGNAMEPREFIX}flask>0:www/py-flask@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}boto3>0:www/py-boto3@${PY_FLAVOR} \
 -		${PYTHON_PKGNAMEPREFIX}netif>0:net/py-netif@${PY_FLAVOR} \
-+		${PYTHON_PKGNAMEPREFIX}netif>0:net/py-netifaces@${PY_FLAVOR} \
++		${PYTHON_PKGNAMEPREFIX}netifaces>0:net/py-netifaces \
  		${PYTHON_PKGNAMEPREFIX}bsd>0:freenas/zvio-py-bsd@${PY_FLAVOR} \
 -		${PYTHON_PKGNAMEPREFIX}cam>0:devel/py-cam@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}sentry-sdk>0:devel/py-sentry-sdk@${PY_FLAVOR} \
@@ -43,7 +43,7 @@ index a89c769..2a6110c 100644
  		${PYTHON_PKGNAMEPREFIX}sqlparse>0:databases/py-sqlparse@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}pycryptodome>0:security/py-pycryptodome@${PY_FLAVOR} \
 -		${PYTHON_PKGNAMEPREFIX}openssl>0:security/py-openssl@${PY_FLAVOR} \
-+		${PYTHON_PKGNAMEPREFIX}openssl>0:security/py-pyopenssl@${PY_FLAVOR} \
++		${PYTHON_PKGNAMEPREFIX}pyopenssl>0:security/py-pyopenssl \
  		${PYTHON_PKGNAMEPREFIX}dnspython>0:dns/py-dnspython@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}sysctl>0:devel/py-sysctl@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}ipaddr>0:devel/py-ipaddr@${PY_FLAVOR} \
@@ -67,7 +67,7 @@ index a89c769..2a6110c 100644
  		intel-pcm>0:sysutils/intel-pcm \
  		pyvmomi>0:net/py-pyvmomi \
 -		samba>=0:net/samba \
-+		samba>=0:net/samba423 \
++		samba423>=0:net/samba423 \
  		swagger-ui>0:freenas/swagger-ui \
  		wireguard-tools>0:net/wireguard-tools
  
@@ -100,10 +100,16 @@ index 11ef5db..f788520 100644
  WRKSRC=		/usr/nas_source/fenced
  
 diff --git a/nas_ports/zvault/py-middlewared/Makefile b/nas_ports/zvault/py-middlewared/Makefile
-index 53feff5..46a3766 100644
+index 53feff5..9bb4535 100644
 --- a/nas_ports/zvault/py-middlewared/Makefile
 +++ b/nas_ports/zvault/py-middlewared/Makefile
-@@ -22,7 +22,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ws4py>0:www/py-ws4py@${PY_FLAVOR} \
+@@ -17,12 +17,12 @@ BUILD_DEPENDS= ${PYTHON_PKGNAMEPREFIX}fastentrypoints>0:devel/py-fastentrypoints
+ 		${PYTHON_PKGNAMEPREFIX}Babel>0:devel/py-babel@${PY_FLAVOR}
+ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ws4py>0:www/py-ws4py@${PY_FLAVOR} \
+ 		${PYTHON_PKGNAMEPREFIX}aiohttp>0:www/py-aiohttp@${PY_FLAVOR} \
++		${PYTHON_PKGNAMEPREFIX}setuptools>=0:devel/py-setuptools@${PY_FLAVOR} \
+ 		${PYTHON_PKGNAMEPREFIX}aiohttp-wsgi>0:www/py-aiohttp-wsgi@${PY_FLAVOR} \
+ 		${PYTHON_PKGNAMEPREFIX}flask>0:www/py-flask@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}boto3>0:www/py-boto3@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}netif>0:net/py-netif@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}bsd>0:freenas/py-bsd@${PY_FLAVOR} \
