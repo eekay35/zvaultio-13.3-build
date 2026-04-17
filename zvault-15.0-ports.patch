@@ -1,35 +1,69 @@
+diff --git a/filesystems/openzfs/Makefile b/filesystems/openzfs/Makefile
+index ea42a2fe1..ac269f531 100644
+--- a/filesystems/openzfs/Makefile
++++ b/filesystems/openzfs/Makefile
+@@ -44,6 +44,7 @@ CONFIGURE_ARGS+=	--enable-debug --enable-debuginfo
+ .if ${PORT_OPTIONS:MPYTHON}
+ CONFIGURE_ARGS+=	--with-python=${PYTHON_VER} --enable-pyzfs
+ BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}packaging>0:devel/py-packaging@${PY_FLAVOR}
++BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}py-setuptools>0:devel/py-setuptools@${PY_FLAVOR}
+ BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}cffi>0:devel/py-cffi@${PY_FLAVOR}
+ RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}cffi>0:devel/py-cffi@${PY_FLAVOR}
+ RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}sysctl>0:devel/py-sysctl@${PY_FLAVOR}
 diff --git a/sysutils/arcconf/Makefile b/sysutils/arcconf/Makefile
-index d525bbbf5..6ac1a0a6f 100644
+index d525bbbf5..a44b059b0 100644
 --- a/sysutils/arcconf/Makefile
 +++ b/sysutils/arcconf/Makefile
-@@ -1,8 +1,8 @@
+@@ -1,6 +1,5 @@
  PORTNAME=	arcconf
--DISTVERSION=	4.09.00.${BUILD}
-+DISTVERSION=	4.23.00.${BUILD}
- PORTEPOCH=	1
+ DISTVERSION=	4.09.00.${BUILD}
+-PORTEPOCH=	1
  CATEGORIES=	sysutils
--MASTER_SITES=	https://download.adaptec.com/raid/storage_manager/
-+MASTER_SITES=	https://storage.microsemi.com/raid/storage_manager/
+ MASTER_SITES=	https://download.adaptec.com/raid/storage_manager/
  DISTNAME=	arcconf_B${BUILD}
- 
- MAINTAINER=	michael@fuckner.net
-@@ -20,7 +20,7 @@ LIB_DEPENDS=	libstdc++.so.6:lang/gcc${GCC_DEFAULT}
+@@ -20,13 +19,13 @@ LIB_DEPENDS=	libstdc++.so.6:lang/gcc${GCC_DEFAULT}
  
  USES=		zip
  USE_GCC=	yes
 -BUILD=		25611
-+BUILD=		27147
++BUILD=		28200
  
  SUB_FILES+=	${PERIODICSCRIPT}
  
+ PERIODICSCRIPT=	410.status-aac-raid
+ 
+-DIST_TYPE=	13_x86_64
++DIST_TYPE=	14_x86_64
+ 
+ NO_BUILD=	yes
+ NO_WRKSUBDIR=	yes
 diff --git a/sysutils/arcconf/distinfo b/sysutils/arcconf/distinfo
-index 8cc9474ad..b72afbd3e 100644
+index 8cc9474ad..7ade00db9 100644
 --- a/sysutils/arcconf/distinfo
 +++ b/sysutils/arcconf/distinfo
 @@ -1,3 +1,3 @@
 -TIMESTAMP = 1696308443
 -SHA256 (arcconf_B25611.zip) = 6543b9d636e6e595bf51ac880ab17c5bd59c80bb27186b0f37f979f46914d669
 -SIZE (arcconf_B25611.zip) = 47701464
-+TIMESTAMP = 1744673640
-+SHA256 (arcconf_B27147.zip) = 14f25095870e0652083f5f8924a85ddf5aa805623a5a521d93b746d9570550d4
-+SIZE (arcconf_B27147.zip) = 14410508
++TIMESTAMP = 1776392603
++SHA256 (arcconf_B28200.zip) = c39cedc54a53f7acaf9483004c1a4319c9722a9029be229a3d6dc6293a97e817
++SIZE (arcconf_B28200.zip) = 15404951
+diff --git a/sysutils/tw_cli/Makefile b/sysutils/tw_cli/Makefile
+index 946021049..773eaa432 100644
+--- a/sysutils/tw_cli/Makefile
++++ b/sysutils/tw_cli/Makefile
+@@ -1,5 +1,5 @@
+ PORTNAME=	tw_cli
+-DISTVERSION=	9.5.5
++DISTVERSION=	10.2.2
+ PORTREVISION=	2
+ CATEGORIES=	sysutils
+ MASTER_SITES=	https://docs.broadcom.com/docs-and-downloads/raid-controllers/raid-controllers-common-files/
+diff --git a/sysutils/tw_cli/distinfo b/sysutils/tw_cli/distinfo
+index 242eb4722..da8b44248 100644
+--- a/sysutils/tw_cli/distinfo
++++ b/sysutils/tw_cli/distinfo
+@@ -1,2 +1,3 @@
++TIMESTAMP = 1776392792
+ SHA256 (3dm2/CLI_freebsd-from_the_10-2-2-1_9-5-5-1_codesets.zip) = 656eb4d1666447ef10b08f9145b93b4f3dab6a27479fe14a4ceea451d7057f97
+ SIZE (3dm2/CLI_freebsd-from_the_10-2-2-1_9-5-5-1_codesets.zip) = 1531484

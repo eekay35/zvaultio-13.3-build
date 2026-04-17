@@ -1,5 +1,5 @@
 diff --git a/nas_ports/freenas/py-middlewared/Makefile b/nas_ports/freenas/py-middlewared/Makefile
-index a89c769..c62c856 100644
+index a89c769..3eda726 100644
 --- a/nas_ports/freenas/py-middlewared/Makefile
 +++ b/nas_ports/freenas/py-middlewared/Makefile
 @@ -15,22 +15,20 @@ EXTRACT_ONLY=
@@ -67,7 +67,7 @@ index a89c769..c62c856 100644
  		intel-pcm>0:sysutils/intel-pcm \
  		pyvmomi>0:net/py-pyvmomi \
 -		samba>=0:net/samba \
-+		samba423>=0:net/samba423 \
++		samba416>=0:net/samba416 \
  		swagger-ui>0:freenas/swagger-ui \
  		wireguard-tools>0:net/wireguard-tools
  
@@ -100,7 +100,7 @@ index 11ef5db..f788520 100644
  WRKSRC=		/usr/nas_source/fenced
  
 diff --git a/nas_ports/zvault/py-middlewared/Makefile b/nas_ports/zvault/py-middlewared/Makefile
-index 53feff5..9bb4535 100644
+index 53feff5..ee28420 100644
 --- a/nas_ports/zvault/py-middlewared/Makefile
 +++ b/nas_ports/zvault/py-middlewared/Makefile
 @@ -17,12 +17,12 @@ BUILD_DEPENDS= ${PYTHON_PKGNAMEPREFIX}fastentrypoints>0:devel/py-fastentrypoints
@@ -117,3 +117,12 @@ index 53feff5..9bb4535 100644
  		${PYTHON_PKGNAMEPREFIX}sentry-sdk>0:devel/py-sentry-sdk@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}markdown>0:textproc/py-markdown@${PY_FLAVOR} \
  		${PYTHON_PKGNAMEPREFIX}mako>0:textproc/py-mako@${PY_FLAVOR} \
+@@ -89,7 +89,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ws4py>0:www/py-ws4py@${PY_FLAVOR} \
+ 		iftop>0:net-mgmt/iftop \
+ 		intel-pcm>0:sysutils/intel-pcm \
+ 		pyvmomi>0:net/py-pyvmomi \
+-		samba>=0:net/samba \
++		samba416>=0:net/samba416 \
+ 		swagger-ui>0:freenas/swagger-ui \
+ 		wireguard-tools>0:net/wireguard-tools
+ 
